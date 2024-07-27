@@ -30,8 +30,9 @@ export class AuthService {
         email: dto.email.trim(),
         password,
         name,
+        wallet: { create: { value: 0 } },
       },
-      select: { name: true, id: true },
+      select: { name: true, id: true, wallet: { select: { value: true } } },
     });
   }
 
