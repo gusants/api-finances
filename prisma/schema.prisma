@@ -18,31 +18,70 @@ model User {
   email String @unique
   name String
   password String
+  isAdmin Boolean @default(false)
   createdAt DateTime @default(now())
-  wallet Wallet?
 }
 
-model Wallet {
+model Models {
   id String @id @default(uuid())
-  value Int @default(0)
-  updatedAt DateTime @updatedAt
-  userId String @unique
-  user User @relation(fields: [userId], references: [id])
-  transactions Transactions[]
-}
-
-model Transactions {
-  id String @id @default(uuid())
-  value String
-  type Transaction
   name String
-  description String
-  walletId String
-  wallet Wallet @relation(fields: [walletId], references: [id])
-  createdAt DateTime @default(now())
+  molding Int
+  pilot Int
+  graduation Int
+  stylist Int
+  quantity Int
+  productionPrice Int
+  taxes Float
+  tissues ModelTissues[]
+  dispatch ModelDispatch[]
+  aviation ModelAviation[]
 }
 
-enum Transaction {
-  INCOMING
-  OUTPUT
+model ModelTissues {
+  @@id([modelId, tissueId])
+  modelId String
+  tissueId String
+  meters Int
+  model Models @relation(fields: [modelId], references: [id], onDelete: Cascade) 
+  tissue Tissues @relation(fields: [tissueId], references: [id], onDelete: Cascade) 
+}
+
+
+model Tissues {
+  id String @id @default(uuid())
+  name String
+  price Int
+  models ModelTissues[]
+}
+
+model ModelDispatch {
+  @@id([modelId, dispatchId])
+  modelId String
+  dispatchId String
+  quantity Int
+  model Models @relation(fields: [modelId], references: [id], onDelete: Cascade) 
+  dispatch Dispatchs @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+}
+
+model Dispatchs {
+  id String @id @default(uuid())
+  name String
+  price Int
+  models ModelDispatch[]
+}
+
+model ModelAviation {
+  @@id([modelId, aviationId])
+  modelId String
+  aviationId String
+  quantity Int
+  model Models @relation(fields: [modelId], references: [id], onDelete: Cascade) 
+  aviation Aviation @relation(fields: [aviationId], references: [id], onDelete: Cascade)
+}
+
+model Aviation {
+  id String @id @default(uuid())
+  name String
+  price Int
+  aviations ModelAviation[]
 }
